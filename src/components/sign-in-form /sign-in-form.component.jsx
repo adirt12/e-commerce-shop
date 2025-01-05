@@ -1,11 +1,13 @@
 import {
-  createUserDocumentFromAuth,
   signInWithGooglePopup,
   signInAuthUserWithEmailAndPassword,
 } from "../../utils/firebase/firebase.utils";
+
 import Button from "../button/button.component";
 import FormInput from "../form-input/form-input.component";
+
 import { useState } from "react";
+
 import "./sign-in-form.styles.scss";
 
 const defaultFormFields = {
@@ -17,13 +19,12 @@ const SignInForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
 
-  //   const resetFormFileds = () => {
-  //     setFormFields(defaultFormFields);
-  //   };
+  const resetFormFileds = () => {
+    setFormFields(defaultFormFields);
+  };
 
   const signInWithGoogle = async () => {
-    const { user } = await signInWithGooglePopup();
-    await createUserDocumentFromAuth(user);
+    await signInWithGooglePopup();
   };
 
   const handleChange = (event) => {
@@ -36,6 +37,9 @@ const SignInForm = () => {
     event.preventDefault();
     try {
       await signInAuthUserWithEmailAndPassword(email, password);
+      // setCurrentUser(user);
+
+      resetFormFileds();
     } catch (err) {
       if (err.code === "auth/invalid-credential") {
         alert("Wrong username or password");
